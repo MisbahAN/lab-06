@@ -116,4 +116,74 @@ class CityListTest {
         assertEquals(0, mockCity().compareTo(cityList.getCities().get(1)));
     }
 
+    /**
+     * Tests whether the hasCity() method correctly identifies
+     * if a city exists or not in the CityList.
+     */
+    @Test
+    void testHasCity() {
+        // Create a list containing one mock city ("Edmonton")
+        CityList cityList = mockCityList();
+
+        // The mock city should exist
+        assertTrue(cityList.hasCity(mockCity()));
+
+        // A new city not added yet should not exist
+        City city = new City("Calgary", "Alberta");
+        assertFalse(cityList.hasCity(city));
+    }
+
+    /**
+     * Tests that the delete() method successfully removes a city from the list.
+     */
+    @Test
+    void testDelete() {
+        // Create a list containing one mock city ("Edmonton")
+        CityList cityList = mockCityList();
+
+        // Verify initial count is 1
+        assertEquals(1, cityList.countCities());
+
+        // Delete the city
+        cityList.delete(mockCity());
+
+        // After deletion, list should be empty
+        assertEquals(0, cityList.countCities());
+        assertFalse(cityList.hasCity(mockCity()));
+    }
+
+    /**
+     * Tests that delete() throws an IllegalArgumentException
+     * when attempting to remove a city that does not exist in the list.
+     */
+    @Test
+    void testDeleteException() {
+        CityList cityList = mockCityList();   // has only "Edmonton"
+        City city = new City("Karachi", "Sindh");
+
+        // "Karachi" was never added, so this should throw an exception
+        assertThrows(IllegalArgumentException.class, () -> {
+            cityList.delete(city);
+        });
+    }
+
+    /**
+     * Tests that countCities() correctly returns
+     * the number of cities in the CityList.
+     */
+    @Test
+    void testCountCities() {
+        CityList cityList = mockCityList();   // starts with one city
+        assertEquals(1, cityList.countCities()); // verify count = 1
+
+        // Add another city and verify the count increases
+        City city = new City("Lahore", "Punjab");
+        cityList.add(city);
+        assertEquals(2, cityList.countCities());
+
+        // Delete one and verify the count decreases
+        cityList.delete(city);
+        assertEquals(1, cityList.countCities());
+    }
+
 }
